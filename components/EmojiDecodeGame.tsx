@@ -42,7 +42,7 @@ export const EmojiDecodeGame: React.FC<{
               key={idx}
               onClick={() => handleClick(opt)}
               disabled={isSubmitted}
-              className={`p-4 sm:p-6 rounded-2xl font-black text-xl sm:text-3xl transition-all border-4 uppercase ${btnClass}`}
+              className={`p-4 sm:p-6 rounded-2xl font-black text-xl sm:text-3xl transition-all border-4 lowercase ${btnClass}`}
             >
               {opt}
             </button>

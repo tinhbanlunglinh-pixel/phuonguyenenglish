@@ -166,10 +166,17 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
           <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
             {megaData.multipleChoice?.map((q, idx) => (
               <div key={q.id} className="bg-white p-4 md:p-6 rounded-[2rem] shadow-lg border-2 border-slate-50 transition-all hover:border-brand-200">
-                <p className="font-black text-base md:text-lg text-slate-800 mb-4 flex gap-3 leading-tight">
-                  <span className="bg-brand-100 text-brand-600 px-3 py-0.5 rounded-lg h-fit text-sm shrink-0">Q{idx + 1}</span>
-                  <span className="break-words">{q.question}</span>
-                </p>
+                <div className="mb-4">
+                  <p className="font-black text-base md:text-lg text-slate-800 flex gap-3 leading-tight">
+                    <span className="bg-brand-100 text-brand-600 px-3 py-0.5 rounded-lg h-fit text-sm shrink-0">Q{idx + 1}</span>
+                    <span className="break-words">{q.question}</span>
+                  </p>
+                  {q.vietnameseHint && (
+                    <p className="text-sm text-brand-600 italic mt-1 ml-[3.25rem] bg-brand-50 p-2 rounded-lg border border-brand-100">
+                      💡 {q.vietnameseHint}
+                    </p>
+                  )}
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {(q.options || []).map((opt, i) => (
                     <button
@@ -220,7 +227,8 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
                 key={q.id || idx} 
                 data={q} 
                 isSubmitted={oddOneOutState[q.id] !== undefined}
-                onAnswer={(isCorrect) => setOddOneOutState(prev => ({ ...prev, [q.id]: isCorrect }))} 
+                onAnswer={(isCorrect) => setOddOneOutState(prev => ({ ...prev, [q.id]: isCorrect }))}
+                idx={idx}
               />
             ))}
           </div>

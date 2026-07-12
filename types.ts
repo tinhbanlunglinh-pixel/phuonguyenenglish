@@ -28,6 +28,7 @@ export interface ListeningQ {
 export interface MultipleChoiceQ {
   id: string;
   question: string;
+  vietnameseHint: string;
   options: string[];
   correctAnswer: number;
   explanation: string;
