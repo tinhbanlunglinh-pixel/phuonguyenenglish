@@ -5,7 +5,7 @@ export const MemoryMatchGame: React.FC<{
   data: MemoryMatchQ;
   onCorrect: () => void;
 }> = ({ data, onCorrect }) => {
-  const [cards, setCards] = useState<{ id: string; text: string; type: 'en' | 'vi'; isMatched: boolean }[]>([]);
+  const [cards, setCards] = useState<{ id: string; text: string; type: 'en' | 'vi'; isMatched: boolean; displayIndex: number }[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState(0);
 
@@ -15,8 +15,12 @@ export const MemoryMatchGame: React.FC<{
       newCards.push({ id: `en_${idx}`, text: p.english, type: 'en', isMatched: false });
       newCards.push({ id: `vi_${idx}`, text: p.vietnamese, type: 'vi', isMatched: false });
     });
-    // Shuffle
-    setCards(newCards.sort(() => Math.random() - 0.5));
+    // Shuffle and assign display index
+    const shuffled = newCards.sort(() => Math.random() - 0.5).map((card, i) => ({
+      ...card,
+      displayIndex: i + 1,
+    }));
+    setCards(shuffled);
     setFlipped([]);
     setMatchedPairs(0);
   }, [data]);
@@ -54,13 +58,17 @@ export const MemoryMatchGame: React.FC<{
           <div
             key={idx}
             onClick={() => handleFlip(idx)}
-            className={`aspect-square sm:aspect-auto sm:h-32 flex items-center justify-center p-2 rounded-2xl cursor-pointer text-center text-sm sm:text-lg font-black transition-all transform ${
+            className={`aspect-square sm:aspect-auto sm:h-32 flex flex-col items-center justify-center p-2 rounded-2xl cursor-pointer text-center font-black transition-all transform relative ${
               c.isMatched ? 'bg-green-100 border-green-400 text-green-700 opacity-50 scale-95 border-2' :
               flipped.includes(idx) ? 'bg-brand-100 border-brand-400 text-brand-800 scale-105 border-4' :
               'bg-slate-200 border-slate-300 text-transparent border-b-8 hover:-translate-y-1'
             }`}
           >
-            {(flipped.includes(idx) || c.isMatched) ? c.text : '?'}
+            {/* Card content */}
+            {(flipped.includes(idx) || c.isMatched) 
+              ? <span className="text-sm sm:text-lg">{c.text}</span>
+              : <span className="text-xl sm:text-2xl font-black text-slate-500">{c.displayIndex}</span>
+            }
           </div>
         ))}
       </div>
