@@ -1,0 +1,8 @@
+﻿{
+  "name": "CÔ PHƯỢNG UYÊN VERSION 3",
+  "description": "Learn today, better tomorrow - Cô Phượng Uyên. Hệ thống AI hỗ trợ giảng dạy và học tập Tiếng Anh.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
