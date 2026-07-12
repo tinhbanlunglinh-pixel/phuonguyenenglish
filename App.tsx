@@ -35,15 +35,19 @@ function App() {
   const [lesson, setLesson] = useState<LessonPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [studentName, setStudentName] = useState('');
-  const [megaScores, setMegaScores] = useState({ mc: 0 });
+  const [megaScores, setMegaScores] = useState({ mc: 0, memoryMatch: 0, oddOneOut: 0, wordGuess: 0, emojiDecode: 0 });
   const [showCertificate, setShowCertificate] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const savedRef = useRef(false);
 
 
 
-  const totalCorrectCount = megaScores.mc;
-  const totalQuestions = (lesson?.practice?.megaTest?.multipleChoice?.length || 0);
+  const totalCorrectCount = megaScores.mc + megaScores.memoryMatch + megaScores.oddOneOut + megaScores.wordGuess + megaScores.emojiDecode;
+  const totalQuestions = (lesson?.practice?.megaTest?.multipleChoice?.length || 0) +
+    (lesson?.practice?.megaTest?.memoryMatch?.length || 0) +
+    (lesson?.practice?.megaTest?.oddOneOut?.length || 0) +
+    (lesson?.practice?.megaTest?.wordGuess?.length || 0) +
+    (lesson?.practice?.megaTest?.emojiDecode?.length || 0);
 
   const handleGenerate = async () => {
 
@@ -170,7 +174,7 @@ function App() {
                         setLessonText('');
                         setSelectedFiles([]);
                         setStudentName('');
-                        setMegaScores({ mc: 0 });
+                        setMegaScores({ mc: 0, memoryMatch: 0, oddOneOut: 0, wordGuess: 0, emojiDecode: 0 });
                         setShowCertificate(false);
                         setError(null);
                       }}

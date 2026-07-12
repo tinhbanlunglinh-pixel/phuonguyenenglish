@@ -397,24 +397,12 @@ export const generateLessonPlan = async (topicInput?: string, textInput?: string
   
   MANDATORY REQUIREMENTS:
   1. Create EXACTLY 10 Multiple Choice Questions (multipleChoice)
-  2. Each question has 4 options [A, B, C, D] - only ONE grammatically correct
-  3. "correctAnswer": Index of correct option (0-3)
-  4. "explanation": Vietnamese explanation
-  5. Questions must be SIMPLE and match the difficulty level of the input content
+  2. Create 5 Word Guess Questions (wordGuess)
+  3. Create 5 Memory Match Pairs (memoryMatch)
+  4. Create 5 Odd One Out Questions (oddOneOut)
+  5. Create 5 Emoji Decode Questions (emojiDecode)
   
-  ⚠️ DIFFICULTY MATCHING:
-  - If input uses simple sentences (3-5 words) → Questions use simple sentences
-  - If input uses basic verbs (has, is, need) → Questions use same simple verbs
-  - PREFER using the EXACT example sentences from input as exercise base
-  
-  EXAMPLE:
-  Question: "She ____ to school every day."
-  Options: ["go", "goes", "going", "went"]
-  → Check: Subject "She" (3rd person singular) + "every day" (present habit)
-  → correctAnswer: 1 (index of "goes")
-  
-  DO NOT create: fillBlank, scramble, errorId, trueFalse, listening, vocabTranslation, memoryMatch, oddOneOut, wordGuess, emojiDecode.
-  Only create multipleChoice with 10 questions.
+  DO NOT create: fillBlank, scramble, errorId, trueFalse, listening, vocabTranslation.
   
   All content must align strictly with the source provided. Do not invent unrelated topics.`;
 
@@ -471,7 +459,7 @@ const safeJsonParse = <T>(text: string): T => {
   } catch (e) { throw new Error("Lỗi xử lý dữ liệu AI."); }
 };
 
-const lessonSchema = { type: Type.OBJECT, properties: { topic: { type: Type.STRING }, vocabulary: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { word: { type: Type.STRING }, emoji: { type: Type.STRING }, ipa: { type: Type.STRING }, meaning: { type: Type.STRING }, example: { type: Type.STRING }, sentenceMeaning: { type: Type.STRING }, type: { type: Type.STRING } }, required: ["word", "ipa", "meaning", "example", "type", "emoji"] } }, grammar: { type: Type.OBJECT, properties: { topic: { type: Type.STRING }, explanation: { type: Type.STRING }, examples: { type: Type.ARRAY, items: { type: Type.STRING } } }, required: ["topic", "explanation", "examples"] }, reading: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, passage: { type: Type.STRING }, translation: { type: Type.STRING }, comprehension: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, question: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, correctAnswer: { type: Type.INTEGER }, explanation: { type: Type.STRING } }, required: ["id", "question", "options", "correctAnswer"] } } }, required: ["title", "passage", "translation", "comprehension"] }, practice: { type: Type.OBJECT, properties: { megaTest: { type: Type.OBJECT, properties: { multipleChoice: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, question: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, correctAnswer: { type: Type.INTEGER }, explanation: { type: Type.STRING } }, required: ["id", "question", "options", "correctAnswer"] } } }, required: ["multipleChoice"] } }, required: ["megaTest"] }, teacherTips: { type: Type.STRING } }, required: ["topic", "vocabulary", "grammar", "reading", "practice", "teacherTips"] };
+const lessonSchema = { type: Type.OBJECT, properties: { topic: { type: Type.STRING }, vocabulary: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { word: { type: Type.STRING }, emoji: { type: Type.STRING }, ipa: { type: Type.STRING }, meaning: { type: Type.STRING }, example: { type: Type.STRING }, sentenceMeaning: { type: Type.STRING }, type: { type: Type.STRING } }, required: ["word", "ipa", "meaning", "example", "type", "emoji"] } }, grammar: { type: Type.OBJECT, properties: { topic: { type: Type.STRING }, explanation: { type: Type.STRING }, examples: { type: Type.ARRAY, items: { type: Type.STRING } } }, required: ["topic", "explanation", "examples"] }, reading: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, passage: { type: Type.STRING }, translation: { type: Type.STRING }, comprehension: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, question: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, correctAnswer: { type: Type.INTEGER }, explanation: { type: Type.STRING } }, required: ["id", "question", "options", "correctAnswer"] } } }, required: ["title", "passage", "translation", "comprehension"] }, practice: { type: Type.OBJECT, properties: { megaTest: { type: Type.OBJECT, properties: { multipleChoice: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, question: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, correctAnswer: { type: Type.INTEGER }, explanation: { type: Type.STRING } }, required: ["id", "question", "options", "correctAnswer"] } }, memoryMatch: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, pairs: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { english: { type: Type.STRING }, vietnamese: { type: Type.STRING } }, required: ["english", "vietnamese"] } } }, required: ["id", "pairs"] } }, oddOneOut: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, answer: { type: Type.STRING }, explanation: { type: Type.STRING } }, required: ["id", "options", "answer", "explanation"] } }, wordGuess: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, word: { type: Type.STRING }, hint: { type: Type.STRING } }, required: ["id", "word", "hint"] } }, emojiDecode: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.STRING }, emojis: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, answer: { type: Type.STRING }, explanation: { type: Type.STRING } }, required: ["id", "emojis", "options", "answer", "explanation"] } } }, required: ["multipleChoice", "memoryMatch", "oddOneOut", "wordGuess", "emojiDecode"] } }, required: ["megaTest"] }, teacherTips: { type: Type.STRING } }, required: ["topic", "vocabulary", "grammar", "reading", "practice", "teacherTips"] };
 
 
 const contentResultSchema = {

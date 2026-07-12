@@ -10,7 +10,7 @@ const generateDecoys = (correctWord: string): string[] => {
   // Strategy: swap/replace letters to create plausible wrong answers
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   
-  for (let d = 0; d < 2; d++) {
+  for (let d = 0; d < 3; d++) {
     let decoy = word.split('');
     // Replace 1-2 random letters
     const positions = Array.from({ length: len }, (_, i) => i)
@@ -64,7 +64,7 @@ export const WordGuessGame: React.FC<{
     onAnswer(options[idx].isCorrect);
   };
 
-  const labels = ['A', 'B', 'C'];
+  const labels = ['A', 'B', 'C', 'D'];
 
   return (
     <div className="p-4 sm:p-8 bg-white rounded-3xl border-4 border-slate-100 flex flex-col items-center">
