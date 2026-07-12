@@ -145,7 +145,7 @@ function App() {
       <header className="bg-brand-700 border-b-4 border-brand-800 sticky top-0 z-50 shadow-xl">
         <div className="max-w-[1600px] mx-auto px-3 sm:px-6 h-16 sm:h-24 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-4 cursor-pointer">
-            <CoPhuongUyenLogo className="w-10 h-10 sm:w-14 sm:h-14 bg-white rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg" color="#8B1C24" />
+            <CoPhuongUyenLogo className="w-10 h-10 sm:w-14 sm:h-14 bg-white rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg" color="#2563eb" />
             <div className="flex flex-col">
               <h1 className="text-base sm:text-xl md:text-3xl font-black text-highlight-400 uppercase tracking-tighter font-display">CÔ PHƯỢNG UYÊN</h1>
               <span className="text-[8px] sm:text-[10px] font-black text-white uppercase tracking-[0.1em] sm:tracking-[0.2em] opacity-90 font-sans hidden xs:block">Learn today, better tomorrow</span>
@@ -245,7 +245,7 @@ function App() {
             {!lesson ? (
               <div className="bg-white rounded-2xl sm:rounded-[3rem] shadow-xl border-b-4 sm:border-b-[12px] border-r-4 sm:border-r-[12px] border-brand-100 p-4 sm:p-8 md:p-16 max-w-4xl mx-auto animate-fade-in text-center relative overflow-hidden ring-2 sm:ring-4 ring-white">
                 <div className="absolute top-0 left-0 w-full h-3 bg-brand-500"></div>
-                <CoPhuongUyenLogo className="w-20 h-20 sm:w-32 sm:h-32 mx-auto mb-4 sm:mb-8 drop-shadow-xl" color="#8B1C24" />
+                <CoPhuongUyenLogo className="w-20 h-20 sm:w-32 sm:h-32 mx-auto mb-4 sm:mb-8 drop-shadow-xl" color="#2563eb" />
                 <h2 className="text-lg sm:text-2xl md:text-4xl font-black text-brand-800 mb-2 uppercase tracking-tighter font-display">Học Tiếng Anh cùng CÔ PHƯỢNG UYÊN</h2>
                 <p className="text-xs sm:text-sm font-black text-slate-400 mb-4 sm:mb-8 uppercase italic opacity-60">"Learn today, better tomorrow"</p>
 
@@ -324,7 +324,7 @@ function App() {
                 {lesson.practice?.megaTest && <MegaChallenge megaData={lesson.practice.megaTest} listeningData={lesson.practice.listening} onScoresUpdate={setMegaScores} />}
 
                 <div className="text-center py-8 sm:py-12 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-brand-100 flex flex-col items-center gap-4 sm:gap-6 relative overflow-hidden">
-                  <CoPhuongUyenLogo className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-lg" color="#8B1C24" />
+                  <CoPhuongUyenLogo className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-lg" color="#2563eb" />
                   <div className="flex flex-col items-center gap-2">
                     <div className="flex items-baseline gap-2">
                       <span className="text-5xl sm:text-6xl font-bold text-brand-600 leading-none">{formatScore(totalScore)}</span>

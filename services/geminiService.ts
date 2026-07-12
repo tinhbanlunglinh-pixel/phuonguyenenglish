@@ -28,7 +28,7 @@ export const getApiKey = (): string | null => {
       return oldKey;
     }
   }
-  return null;
+  return process.env.API_KEY || null;
 };
 
 export const setApiKey = (key: string): void => {
