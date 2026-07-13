@@ -42,7 +42,9 @@ export const WordGuessGame: React.FC<{
   data: WordGuessQ;
   onAnswer: (isCorrect: boolean) => void;
   isSubmitted: boolean;
-}> = ({ data, onAnswer, isSubmitted }) => {
+  idx: number;
+  total: number;
+}> = ({ data, onAnswer, isSubmitted, idx, total }) => {
   const word = data.word.toUpperCase();
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
@@ -68,12 +70,13 @@ export const WordGuessGame: React.FC<{
 
   return (
     <div className="p-4 sm:p-8 bg-white rounded-3xl border-4 border-slate-100 flex flex-col items-center">
-      <p className="text-xl sm:text-2xl font-bold text-brand-800 mb-6 text-center">💡 Gợi ý: {data.hint}</p>
+      <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Question {idx + 1}/{total}</p>
+      <p className="text-xl sm:text-2xl font-bold text-brand-800 mb-6 text-center">💡 Hint: {data.hint}</p>
       
       {/* Word display with blanks */}
       <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {word.split('').map((char, idx) => (
-          <div key={idx} className="w-10 h-14 sm:w-12 sm:h-16 flex items-center justify-center bg-slate-100 border-b-4 border-slate-300 rounded-xl font-black text-2xl">
+        {word.split('').map((char, charIdx) => (
+          <div key={charIdx} className="w-10 h-14 sm:w-12 sm:h-16 flex items-center justify-center bg-slate-100 border-b-4 border-slate-300 rounded-xl font-black text-2xl">
             {char === ' ' ? ' ' : (answered || isSubmitted ? char : '?')}
           </div>
         ))}
@@ -81,8 +84,8 @@ export const WordGuessGame: React.FC<{
 
       {/* ABC options */}
       <div className="w-full max-w-lg space-y-3">
-        {options.map((opt, idx) => {
-          const isSelected = selected === idx;
+        {options.map((opt, optIdx) => {
+          const isSelected = selected === optIdx;
           const showResult = answered || isSubmitted;
 
           let btnClass = 'bg-white border-slate-200 text-slate-700 hover:border-brand-300 hover:bg-brand-50';
@@ -98,8 +101,8 @@ export const WordGuessGame: React.FC<{
 
           return (
             <button
-              key={idx}
-              onClick={() => handleSelect(idx)}
+              key={optIdx}
+              onClick={() => handleSelect(optIdx)}
               disabled={answered || isSubmitted}
               className={`w-full p-4 rounded-xl border-2 font-bold text-left text-base sm:text-lg transition-all flex items-center gap-4 active:scale-[0.98] ${btnClass}`}
             >
@@ -108,7 +111,7 @@ export const WordGuessGame: React.FC<{
                 showResult && isSelected && !opt.isCorrect ? 'bg-red-500 text-white' :
                 'bg-brand-100 text-brand-600'
               }`}>
-                {labels[idx]}
+                {labels[optIdx]}
               </span>
               <span className="tracking-[0.3em] text-xl">{opt.text}</span>
             </button>
@@ -120,8 +123,8 @@ export const WordGuessGame: React.FC<{
         <div className="mt-6 text-center">
           <p className="font-black text-xl text-slate-700">
             {selected !== null && options[selected].isCorrect 
-              ? <span className="text-green-600">🌟 Chính xác! Đáp án là: {word}</span>
-              : <span className="text-amber-600">💡 Đáp án đúng là: <span className="text-green-600">{word}</span></span>
+              ? <span className="text-green-600">🌟 Correct! The answer is: {word}</span>
+              : <span className="text-amber-600">💡 The correct answer is: <span className="text-green-600">{word}</span></span>
             }
           </p>
         </div>

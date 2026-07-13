@@ -387,20 +387,27 @@ export const generateLessonPlan = async (topicInput?: string, textInput?: string
     * "example": English example sentence (EXACTLY as shown in source)
     * "sentenceMeaning": Vietnamese translation of example (EXACTLY as shown in source, lowercase)
   
-  ===== QUIZ - 10 CÂU HỎI TRẮC NGHIỆM ĐƠN GIẢN =====
+  ===== QUIZ - TỔNG CỘNG 30 CÂU HỎI =====
   
   🎓 YOU ARE A PROFESSIONAL ENGLISH TEACHER WITH 20 YEARS EXPERIENCE
   You must create exercises with 100% grammatical accuracy. Every answer key must be verified.
   
   ⚠️ CRITICAL: 80% CONTENT MUST USE INPUT VOCABULARY/GRAMMAR
-  At least 8/10 questions MUST directly use the vocabulary, grammar patterns, and concepts from the INPUT SOURCE.
+  At least 80% of questions MUST directly use the vocabulary, grammar patterns, and concepts from the INPUT SOURCE.
   
-  MANDATORY REQUIREMENTS:
-  1. Create EXACTLY 10 Multiple Choice Questions (multipleChoice). Each must have a "vietnameseHint" explaining the meaning of the sentence or giving a clue in Vietnamese.
-  2. Create 5 Word Guess Questions (wordGuess)
-  3. Create 5 Memory Match Pairs (memoryMatch)
-  4. Create 5 Odd One Out Questions (oddOneOut)
-  5. Create 5 Emoji Decode Questions (emojiDecode)
+  ⚠️ LANGUAGE RULES FOR QUESTIONS:
+  - ALL questions, options, hints, and explanations MUST be in ENGLISH
+  - "vietnameseHint" in multipleChoice: provide a brief Vietnamese translation/hint for the question
+  - wordGuess "hint": MUST be in English (e.g. "The male parent of a child")
+  - oddOneOut "explanation": MUST be in English
+  - emojiDecode "explanation": MUST be in English
+  
+  MANDATORY QUESTION COUNT (TOTAL = 30):
+  1. Create EXACTLY 10 Multiple Choice Questions (multipleChoice). Each must have a "vietnameseHint" field with Vietnamese translation/hint.
+  2. Create EXACTLY 5 Word Guess Questions (wordGuess) with English hints
+  3. Create EXACTLY 1 Memory Match set (memoryMatch) containing EXACTLY 5 pairs of english-vietnamese words
+  4. Create EXACTLY 5 Odd One Out Questions (oddOneOut) with English explanation
+  5. Create EXACTLY 5 Emoji Decode Questions (emojiDecode) with English explanation
   
   DO NOT create: fillBlank, scramble, errorId, trueFalse, listening, vocabTranslation.
   

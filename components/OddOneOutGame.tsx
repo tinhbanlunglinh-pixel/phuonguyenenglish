@@ -18,7 +18,7 @@ export const OddOneOutGame: React.FC<{
   return (
     <div className="p-4 sm:p-8 bg-white rounded-3xl border-4 border-slate-100">
       <h3 className="text-xl sm:text-2xl font-bold text-slate-700 mb-6 text-center">
-        Câu {idx + 1}: Tìm từ khác với từ còn lại
+        Question {idx + 1}: Find the odd one out
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {data.options.map((opt, idx) => {
@@ -50,7 +50,7 @@ export const OddOneOutGame: React.FC<{
       {isSubmitted && (
         <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
           <p className="font-bold text-blue-800 flex items-center gap-2">
-            <span className="text-xl">💡</span> Giải thích: {data.explanation}
+            <span className="text-xl">💡</span> Explanation: {data.explanation}
           </p>
         </div>
       )}

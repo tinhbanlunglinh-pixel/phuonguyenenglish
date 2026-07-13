@@ -30,21 +30,21 @@ const CollapsibleExplanation: React.FC<{
         <div className="flex items-center gap-2">
           <span className="text-2xl">{isCorrect ? '🌟' : '💡'}</span>
           <span className={`font-bold text-sm ${isCorrect ? 'text-green-700' : 'text-amber-700'}`}>
-            {isCorrect ? 'Tuyệt vời! Con giỏi lắm!' : 'Chưa đúng rồi!'}
+            {isCorrect ? 'Excellent! Well done!' : 'Not quite right!'}
           </span>
         </div>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="px-3 py-1 text-xs font-bold bg-white/50 rounded-lg hover:bg-white/80 transition-all"
         >
-          {isOpen ? '▲ Thu gọn' : '▼ Xem giải thích'}
+          {isOpen ? '▲ Collapse' : '▼ Explanation'}
         </button>
       </div>
       <div className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="px-4 pb-4 space-y-2">
           {!isCorrect && correctAnswer && (
             <div className="bg-white/50 p-2 rounded-lg">
-              <p className="text-xs text-slate-500 mb-1">Đáp án đúng:</p>
+              <p className="text-xs text-slate-500 mb-1">Correct answer:</p>
               <p className="font-bold text-green-700 text-sm">{correctAnswer}</p>
             </div>
           )}
@@ -63,6 +63,7 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
   // State for MC quiz
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [submitted, setSubmitted] = useState<Record<string, boolean>>({});
+  const [showVietnameseHints, setShowVietnameseHints] = useState(true);
 
   // States for other games
   const [memoryMatchScore, setMemoryMatchScore] = useState(0);
@@ -78,6 +79,9 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
   const checkFinal = (qId: string, isCorrect: boolean) => {
     setSubmitted(prev => ({ ...prev, [qId]: true }));
   };
+
+  // Memory match counts as 5 questions (5 pairs)
+  const memoryMatchQuestionCount = megaData.memoryMatch?.[0]?.pairs?.length || 0;
 
   const calculateScores = () => {
     let mcCorrect = 0;
@@ -117,7 +121,7 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
   
   const totalAnswered = 
     Object.keys(submitted).length +
-    (memoryMatchScore > 0 ? 1 : 0) + // Treat memory match as 1 big block or sum of pairs. Wait, in history we track pairs. We'll just display overall progress differently.
+    (memoryMatchScore > 0 ? memoryMatchQuestionCount : 0) +
     Object.keys(oddOneOutState).length +
     Object.keys(wordGuessState).length +
     Object.keys(emojiDecodeState).length;
@@ -125,17 +129,17 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
   const totalCorrect = scores.mc + scores.memoryMatch + scores.oddOneOut + scores.wordGuess + scores.emojiDecode;
 
   const tabs = [
-    { id: 'mc', label: '📝 Trắc nghiệm', count: megaData.multipleChoice?.length || 0 },
-    { id: 'wordGuess', label: '🕵️ Đoán chữ', count: megaData.wordGuess?.length || 0 },
-    { id: 'memoryMatch', label: '🎴 Lật thẻ', count: megaData.memoryMatch?.length || 0 },
-    { id: 'oddOneOut', label: '🔍 Tìm điểm khác', count: megaData.oddOneOut?.length || 0 },
-    { id: 'emojiDecode', label: '😎 Emoji', count: megaData.emojiDecode?.length || 0 },
+    { id: 'mc', label: '📝 Multiple Choice', count: megaData.multipleChoice?.length || 0 },
+    { id: 'wordGuess', label: '🕵️ Word Guess', count: megaData.wordGuess?.length || 0 },
+    { id: 'memoryMatch', label: '🎴 Memory Match', count: memoryMatchQuestionCount },
+    { id: 'oddOneOut', label: '🔍 Odd One Out', count: megaData.oddOneOut?.length || 0 },
+    { id: 'emojiDecode', label: '😎 Emoji Decode', count: megaData.emojiDecode?.length || 0 },
   ].filter(t => t.count > 0);
 
   return (
     <div className="bg-brand-900 rounded-[3rem] shadow-xl border-[8px] border-brand-800 overflow-hidden mb-12 font-sans">
       <div className="bg-brand-800 p-6 text-center border-b-2 border-brand-700">
-        <h2 className="text-xl md:text-2xl font-black text-white uppercase italic mb-4 tracking-tighter">🚀 THỬ THÁCH ĐẶC BIỆT 🚀</h2>
+        <h2 className="text-xl md:text-2xl font-black text-white uppercase italic mb-4 tracking-tighter">🚀 MEGA CHALLENGE 🚀</h2>
         
         {/* Tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-4">
@@ -143,20 +147,23 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
             <button
               key={tab.id}
               onClick={() => setActiveZone(tab.id as any)}
-              className={`px-4 py-2 rounded-xl font-bold text-sm sm:text-base transition-all ${
+              className={`px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1 ${
                 activeZone === tab.id 
                   ? 'bg-brand-500 text-white shadow-lg scale-105' 
                   : 'bg-white/10 text-brand-200 hover:bg-white/20'
               }`}
             >
               {tab.label}
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                activeZone === tab.id ? 'bg-white/20' : 'bg-white/10'
+              }`}>{tab.count}</span>
             </button>
           ))}
         </div>
 
         {totalAnswered > 0 && (
           <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-            <span className="text-white font-bold text-sm">Điểm tích luỹ: {totalCorrect}</span>
+            <span className="text-white font-bold text-sm">Score: {totalCorrect}</span>
           </div>
         )}
       </div>
@@ -164,6 +171,21 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
       <div className="p-4 md:p-8 bg-white/5 min-h-[400px]">
         {activeZone === 'mc' && (
           <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
+            {/* Vietnamese Hint Toggle */}
+            <div className="flex justify-end mb-2">
+              <button
+                onClick={() => setShowVietnameseHints(!showVietnameseHints)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                  showVietnameseHints 
+                    ? 'bg-brand-500 text-white shadow-lg' 
+                    : 'bg-white/10 text-brand-200 hover:bg-white/20'
+                }`}
+              >
+                <span>{showVietnameseHints ? '🇻🇳' : '🔒'}</span>
+                {showVietnameseHints ? 'Gợi ý TV: ON' : 'Gợi ý TV: OFF'}
+              </button>
+            </div>
+
             {megaData.multipleChoice?.map((q, idx) => (
               <div key={q.id} className="bg-white p-4 md:p-6 rounded-[2rem] shadow-lg border-2 border-slate-50 transition-all hover:border-brand-200">
                 <div className="mb-4">
@@ -171,7 +193,7 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
                     <span className="bg-brand-100 text-brand-600 px-3 py-0.5 rounded-lg h-fit text-sm shrink-0">Q{idx + 1}</span>
                     <span className="break-words">{q.question}</span>
                   </p>
-                  {q.vietnameseHint && (
+                  {showVietnameseHints && q.vietnameseHint && (
                     <p className="text-sm text-brand-600 italic mt-1 ml-[3.25rem] bg-brand-50 p-2 rounded-lg border border-brand-100">
                       💡 {q.vietnameseHint}
                     </p>
@@ -214,7 +236,7 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
               <MemoryMatchGame 
                 key={q.id || idx} 
                 data={q} 
-                onCorrect={() => setMemoryMatchScore(prev => prev + 1)} 
+                onComplete={(score) => setMemoryMatchScore(score)} 
               />
             ))}
           </div>
@@ -241,7 +263,9 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
                 key={q.id || idx} 
                 data={q} 
                 isSubmitted={wordGuessState[q.id] !== undefined}
-                onAnswer={(isCorrect) => setWordGuessState(prev => ({ ...prev, [q.id]: isCorrect }))} 
+                onAnswer={(isCorrect) => setWordGuessState(prev => ({ ...prev, [q.id]: isCorrect }))}
+                idx={idx}
+                total={megaData.wordGuess?.length || 0}
               />
             ))}
           </div>
@@ -254,7 +278,9 @@ export const MegaChallenge: React.FC<MegaChallengeProps> = ({ megaData, onScores
                 key={q.id || idx} 
                 data={q} 
                 isSubmitted={emojiDecodeState[q.id] !== undefined}
-                onAnswer={(isCorrect) => setEmojiDecodeState(prev => ({ ...prev, [q.id]: isCorrect }))} 
+                onAnswer={(isCorrect) => setEmojiDecodeState(prev => ({ ...prev, [q.id]: isCorrect }))}
+                idx={idx}
+                total={megaData.emojiDecode?.length || 0}
               />
             ))}
           </div>

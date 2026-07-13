@@ -44,7 +44,7 @@ function App() {
 
   const totalCorrectCount = megaScores.mc + megaScores.memoryMatch + megaScores.oddOneOut + megaScores.wordGuess + megaScores.emojiDecode;
   const totalQuestions = (lesson?.practice?.megaTest?.multipleChoice?.length || 0) +
-    (lesson?.practice?.megaTest?.memoryMatch?.length || 0) +
+    (lesson?.practice?.megaTest?.memoryMatch?.[0]?.pairs?.length || 0) +
     (lesson?.practice?.megaTest?.oddOneOut?.length || 0) +
     (lesson?.practice?.megaTest?.wordGuess?.length || 0) +
     (lesson?.practice?.megaTest?.emojiDecode?.length || 0);

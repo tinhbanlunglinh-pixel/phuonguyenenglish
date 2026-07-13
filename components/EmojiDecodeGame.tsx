@@ -5,7 +5,9 @@ export const EmojiDecodeGame: React.FC<{
   data: EmojiDecodeQ;
   onAnswer: (isCorrect: boolean) => void;
   isSubmitted: boolean;
-}> = ({ data, onAnswer, isSubmitted }) => {
+  idx: number;
+  total: number;
+}> = ({ data, onAnswer, isSubmitted, idx, total }) => {
   const [selected, setSelected] = useState<string | null>(null);
 
   const handleClick = (opt: string) => {
@@ -17,14 +19,15 @@ export const EmojiDecodeGame: React.FC<{
   return (
     <div className="p-4 sm:p-8 bg-white rounded-3xl border-4 border-slate-100 text-center">
       <div className="mb-8">
-        <h3 className="text-lg font-bold text-slate-500 uppercase tracking-widest mb-4">Mật mã Emoji</h3>
+        <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Question {idx + 1}/{total}</p>
+        <h3 className="text-lg font-bold text-slate-500 uppercase tracking-widest mb-4">Emoji Decode</h3>
         <div className="text-5xl sm:text-7xl tracking-widest bg-slate-50 py-8 rounded-2xl border-2 border-slate-100">
           {data.emojis}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {data.options.map((opt, idx) => {
+        {data.options.map((opt, optIdx) => {
           const isCorrectAns = opt === data.answer;
           const isSelected = selected === opt;
           
@@ -39,7 +42,7 @@ export const EmojiDecodeGame: React.FC<{
 
           return (
             <button
-              key={idx}
+              key={optIdx}
               onClick={() => handleClick(opt)}
               disabled={isSubmitted}
               className={`p-4 sm:p-6 rounded-2xl font-black text-xl sm:text-3xl transition-all border-4 lowercase ${btnClass}`}
@@ -53,7 +56,7 @@ export const EmojiDecodeGame: React.FC<{
       {isSubmitted && (
         <div className="mt-8 p-4 bg-brand-50 border-2 border-brand-200 rounded-xl">
           <p className="font-bold text-brand-800 text-lg">
-            Giải thích: {data.explanation}
+            Explanation: {data.explanation}
           </p>
         </div>
       )}
