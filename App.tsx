@@ -264,6 +264,7 @@ function App() {
                     topic={lesson.topic}
                     score={totalScore}
                     totalCorrect={totalCorrectCount}
+                    totalQuestions={totalQuestions}
                     evaluation={evaluation}
                     onClose={() => setShowCertificate(false)}
                   />
@@ -286,12 +287,12 @@ function App() {
                   <CoPhuongUyenLogo className="w-16 h-16" />
                 </div>
                 <div>
-                  <h3 className="font-black text-xl md:text-2xl uppercase leading-tight text-white mb-1">TRUNG TÂM CÔ PHƯỢNG UYÊN</h3>
+                  <h3 className="font-black text-xl md:text-2xl uppercase leading-tight text-white mb-1">Trung tâm Ngoại ngữ Cô Phượng Uyên</h3>
                   <p className="text-blue-200 font-bold text-xs uppercase tracking-wider">LEARN TODAY, BETTER TOMORROW 🌟</p>
                 </div>
               </div>
               <p className="text-blue-100 text-sm md:text-base leading-relaxed italic">
-                "Đồng hành cùng học viên xây dựng nền móng vững chắc, mở khóa tương lai tươi sáng và chắp cánh ước mơ tiếng Anh bay xa."
+                Truyền cảm hứng yêu thích tiếng Anh – Xây nền tảng vững chắc – Học hiệu quả – Hiểu sâu – Sử dụng thành thạo.
               </p>
             </div>
 
@@ -311,9 +312,9 @@ function App() {
                 <li className="flex items-start gap-4">
                   <span className="text-2xl mt-1">✨</span>
                   <div>
-                    <p className="font-bold text-blue-200 text-xs uppercase tracking-widest mb-1">PHƯƠNG CHÂM:</p>
+                    <p className="font-bold text-blue-200 text-xs uppercase tracking-widest mb-1">Phương châm:</p>
                     <p className="font-bold text-white text-sm leading-relaxed">
-                      Learn today, better tomorrow • Dễ tiếp thu, nâng chuẩn rèn luyện toàn diện
+                      Học vững từ gốc- ứng dụng thực tế- tự tin hội nhập toàn cầu
                     </p>
                   </div>
                 </li>
@@ -336,8 +337,8 @@ function App() {
                 <a href="https://www.facebook.com/profile.php?id=100045429101693" target="_blank" className="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 p-4 rounded-2xl transition-all group">
                   <span className="text-3xl group-hover:scale-110 transition-transform">🌐</span>
                   <div>
-                    <p className="font-bold text-blue-200 text-[10px] uppercase tracking-widest mb-1">FACEBOOK GIÁM ĐỐC</p>
-                    <p className="font-bold text-white text-sm">Ghé thăm Facebook Cô...</p>
+                    <p className="font-bold text-blue-200 text-[10px] uppercase tracking-widest mb-1">FACEBOOK</p>
+                    <p className="font-bold text-white text-sm">Ghé thăm fanpage của Trung Tâm.</p>
                   </div>
                 </a>
               </div>
@@ -349,7 +350,7 @@ function App() {
             <p className="text-blue-200 text-sm font-medium">© 2026 Trung Tâm Ngoại Ngữ Cô Phượng Uyên. Learn today, better tomorrow.</p>
             <div className="bg-white/5 border border-white/10 px-5 py-2.5 rounded-full flex items-center gap-3 hover:bg-white/10 transition-colors">
               <span>👑</span>
-              <span className="text-blue-100 text-sm font-bold">Tự Hào Chinh Phục Kiến Thức Anh Ngữ</span>
+              <span className="text-blue-100 text-sm font-bold">Chăm chỉ rèn luyện – Chinh phục tiếng Anh</span>
             </div>
           </div>
         </div>
