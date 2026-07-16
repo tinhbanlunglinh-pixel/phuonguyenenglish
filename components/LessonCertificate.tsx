@@ -512,7 +512,13 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                 <img 
                   src="https://i.postimg.cc/fb4BH1rF/cf0e6918-00a9-4b75-8bee-65d4e67fa7bf.png" 
                   alt="Trang trí viền dưới" 
-                  style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto', 
+                    objectFit: 'contain',
+                    transform: 'scale(1.3)', // Phóng to 1.3 lần
+                    transformOrigin: 'bottom center' // Giữ cố định ở viền dưới khi phóng to
+                  }} 
                 />
               </div>
 
