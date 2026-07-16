@@ -461,24 +461,17 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                 </div>
               </div>
 
-              {/* ──── Footer: Date + Signature ──── */}
-              <div style={{
-                width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-                paddingLeft: '30px', paddingRight: '30px',
-                marginTop: 'auto', marginBottom: '10px'
-              }}>
-                {/* Left: Custom Icon/Logo + Date */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', paddingBottom: '16px' }}>
-                  <img 
-                    src="https://i.postimg.cc/fb4BH1rF/cf0e6918-00a9-4b75-8bee-65d4e67fa7bf.png" 
-                    alt="2 bạn nhỏ" 
-                    style={{ width: '150px', height: 'auto', objectFit: 'contain' }} 
-                  />
-                  <p style={{ fontSize: '14px', color: '#64748b', fontWeight: 600 }}>
-                    Ngày cấp: {fullDateStr}
-                  </p>
-                </div>
+              {/* ──── Date ──── */}
+              <p style={{ fontSize: '15px', color: '#64748b', fontWeight: 700, marginTop: '4px', marginBottom: '8px' }}>
+                Ngày cấp: {fullDateStr}
+              </p>
 
+              {/* ──── Footer: Signature ──── */}
+              <div style={{
+                width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end',
+                paddingRight: '40px',
+                marginTop: 'auto', marginBottom: '30px', position: 'relative', zIndex: 10
+              }}>
                 {/* Right: Signature block - chuẩn hành chính */}
                 <div style={{ textAlign: 'center', minWidth: '180px' }}>
                   {/* Signature image */}
@@ -504,6 +497,23 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                     Võ Thùy Phượng Uyên
                   </p>
                 </div>
+              </div>
+
+              {/* 2 bạn nhỏ làm viền đáy */}
+              <div style={{
+                position: 'absolute',
+                bottom: 0, left: 0, right: 0,
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                pointerEvents: 'none',
+                zIndex: 5
+              }}>
+                <img 
+                  src="https://i.postimg.cc/fb4BH1rF/cf0e6918-00a9-4b75-8bee-65d4e67fa7bf.png" 
+                  alt="Trang trí viền dưới" 
+                  style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                />
               </div>
 
             </div>
