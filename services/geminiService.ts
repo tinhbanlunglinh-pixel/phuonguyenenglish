@@ -9,13 +9,13 @@ const OLD_API_KEY_STORAGE = 'nextgen_english_api_key';
 const MODEL_STORAGE = 'co_phuong_uyen_selected_model';
 const OLD_MODEL_STORAGE = 'nextgen_english_selected_model';
 
-// Model fallback order as per AI_INSTRUCTIONS.md
-// Default: gemini-3-pro-preview
-// Fallback: gemini-3-flash-preview →gemini-3-pro-preview →gemini-2.5-flash
+// Model fallback order (Updated July 2026)
+// Default: gemini-3.5-flash (best performance/cost ratio)
+// Fallback: gemini-3.5-flash → gemini-3.1-pro → gemini-3-flash
 export const AVAILABLE_MODELS = [
-  { id: 'gemini-3-pro-preview', name: 'Gemini 3 Pro', isDefault: true },
-  { id: 'gemini-3-flash-preview', name: 'Gemini 3 Flash' },
-  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash' },
+  { id: 'gemini-3.5-flash', name: 'Gemini 3.5 Flash', isDefault: true },
+  { id: 'gemini-3.1-pro', name: 'Gemini 3.1 Pro' },
+  { id: 'gemini-3-flash', name: 'Gemini 3 Flash' },
 ];
 
 export const getApiKey = (): string | null => {

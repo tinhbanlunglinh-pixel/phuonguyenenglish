@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { generateLessonPlan, fileToBase64 } from './services/geminiService';
+import React, { useState, useRef, useEffect } from 'react';
+import { generateLessonPlan, fileToBase64, hasApiKey } from './services/geminiService';
 import { LessonPlan } from './types';
 import { VocabularySection } from './components/VocabularySection';
 import { MegaChallenge } from './components/MegaChallenge';
 import { UploadZone } from './components/UploadZone';
 import { LessonCertificate } from './components/LessonCertificate';
 import { LearningHistory } from './components/LearningHistory';
+import { ApiKeySettingsModal } from './components/ApiKeySettingsModal';
 import { saveLessonRecord, generateRecordId } from './services/historyService';
 
 declare global {
@@ -38,7 +39,15 @@ function App() {
   const [megaScores, setMegaScores] = useState({ mc: 0, memoryMatch: 0, oddOneOut: 0, wordGuess: 0, emojiDecode: 0 });
   const [showCertificate, setShowCertificate] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const savedRef = useRef(false);
+
+  // Auto-open API Key modal if no key is set
+  useEffect(() => {
+    if (!hasApiKey()) {
+      setShowApiKeyModal(true);
+    }
+  }, []);
 
 
 
@@ -75,7 +84,10 @@ function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       const rawError = err.message || "Lỗi không xác định";
-      if (rawError.includes("429") || rawError.includes("RESOURCE_EXHAUSTED")) {
+      if (rawError.includes("API_KEY_REQUIRED")) {
+        setError("Chưa có API Key! Vui lòng nhập API Key để sử dụng.");
+        setShowApiKeyModal(true);
+      } else if (rawError.includes("429") || rawError.includes("RESOURCE_EXHAUSTED")) {
         setError("LỖI 429: Hết hạn mức sử dụng (Quota Exhausted). Cô hãy đổi API Key khác nhé!");
       } else if (rawError.includes("401") || rawError.includes("API_KEY_INVALID")) {
         setError("LỖI 401: Mã API Key không hợp lệ! Cô hãy kiểm tra lại nhé!");
@@ -101,10 +113,11 @@ function App() {
 
   function getEvaluation(score: number) {
     const s = score || 0;
-    if (s >= 9) return { text: "XUẤT SẮC", emoji: "🌟", level: "EXCELLENT", praise: "Con là một ngôi sao sáng nhất lớp CÔ PHƯỢNG UYÊN!" };
-    if (s >= 7) return { text: "KHÁ GIỎI", emoji: "🎯", level: "GREAT JOB", praise: "Con làm bài rất tuyệt vời, tiếp tục phát huy nhé!" };
-    if (s >= 5) return { text: "CỐ GẮNG", emoji: "💪", level: "GOOD EFFORT", praise: "Con đã nỗ lực rất nhiều, CÔ PHƯỢNG UYÊN tự hào về con!" };
-    return { text: "CẦN NỖ LỰC", emoji: "📚", level: "KEEP IT UP", praise: "Đừng nản lòng con nhé, bài sau mình làm tốt hơn nào!" };
+    if (s >= 9) return { text: "HOÀN THÀNH XUẤT SẮC", emoji: "🌟", level: "EXCELLENT", praise: "Con là một ngôi sao sáng nhất lớp CÔ PHƯỢNG UYÊN!" };
+    if (s >= 8) return { text: "HOÀN THÀNH TIÊU BIỂU", emoji: "🥇", level: "OUTSTANDING", praise: "Con đã làm rất tốt!\nHãy tiếp tục học tập và chinh phục nhiều thử thách mới nhé!" };
+    if (s >= 7) return { text: "HOÀN THÀNH TỐT", emoji: "⭐", level: "GREAT JOB", praise: "Con làm bài rất tuyệt vời, tiếp tục phát huy nhé!" };
+    if (s >= 6) return { text: "HOÀN THÀNH", emoji: "👍", level: "GOOD EFFORT", praise: "Con đã nỗ lực rất nhiều, CÔ PHƯỢNG UYÊN tự hào về con!" };
+    return { text: "CẦN CỐ GẮNG HƠN NỮA", emoji: "🌱", level: "KEEP IT UP", praise: "Đừng nản lòng con nhé, bài sau mình làm tốt hơn nào!" };
   }
 
   const evaluation = getEvaluation(totalScore);
@@ -130,11 +143,33 @@ function App() {
               <span className="text-white text-xs sm:text-sm font-bold hidden sm:block">Lịch sử</span>
             </button>
 
-
+            <button
+              onClick={() => setShowApiKeyModal(true)}
+              className="flex items-center gap-1 sm:gap-2 bg-white/10 hover:bg-white/20 px-2 sm:px-3 py-1 sm:py-2 rounded-lg transition-all relative"
+            >
+              <span className="text-base sm:text-lg">⚙️</span>
+              <span className="text-white text-xs sm:text-sm font-bold hidden sm:block">API Key</span>
+              {!hasApiKey() && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+              )}
+            </button>
           </div>
         </div>
       </header>
 
+      {/* Red warning when no API key */}
+      {!hasApiKey() && (
+        <div
+          onClick={() => setShowApiKeyModal(true)}
+          className="bg-red-50 border-b-2 border-red-200 py-2 px-4 text-center cursor-pointer hover:bg-red-100 transition-all"
+        >
+          <p className="text-red-600 text-sm font-bold flex items-center justify-center gap-2">
+            <span className="animate-pulse">🔴</span>
+            Lấy API Key để sử dụng app — Bấm vào đây để thiết lập
+            <span className="text-xs">→</span>
+          </p>
+        </div>
+      )}
 
       <main className="max-w-[1400px] mx-auto px-3 sm:px-6 py-4 sm:py-10 flex-grow w-full relative">
         <div>
@@ -355,6 +390,13 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* API Key Settings Modal */}
+      <ApiKeySettingsModal
+        isOpen={showApiKeyModal}
+        onClose={() => setShowApiKeyModal(false)}
+        mandatory={!hasApiKey()}
+      />
     </div>
   );
 }
