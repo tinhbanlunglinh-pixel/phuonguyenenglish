@@ -128,6 +128,7 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
 }) => {
   const certRef = useRef<HTMLDivElement>(null);
   const [fullDateStr, setFullDateStr] = useState('');
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const now = new Date();
@@ -135,6 +136,21 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
     setFullDateStr(`${day}/${month}/${year}`);
+  }, []);
+
+  useEffect(() => {
+    const updateScale = () => {
+      // Calculate scale to fit the certificate within the screen
+      const availableHeight = window.innerHeight - 100; // Leave some space for header/padding
+      const availableWidth = window.innerWidth - 40;
+      const scaleY = availableHeight / 877;
+      const scaleX = availableWidth / 620;
+      setScale(Math.min(scaleX, scaleY, 1)); // Don't scale larger than 100%
+    };
+    
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
   }, []);
 
   const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
@@ -190,7 +206,7 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
       </div>
 
       {/* Certificate - A4-like portrait ratio */}
-      <div className="relative flex items-center justify-center w-full overflow-hidden">
+      <div className="relative flex items-center justify-center w-full flex-1 overflow-hidden">
         <div
           ref={certRef}
           style={{
@@ -200,8 +216,10 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
             fontFamily: "'Nunito', 'Roboto', sans-serif",
             position: 'relative',
             overflow: 'hidden',
+            transform: `scale(${scale})`,
+            transformOrigin: 'center center',
           }}
-          className="rounded-lg shadow-2xl shrink-0 origin-center scale-[0.4] sm:scale-[0.55] md:scale-[0.7] lg:scale-[0.85] xl:scale-[0.95]"
+          className="rounded-lg shadow-2xl shrink-0"
         >
           {/* Background decorative circles */}
           <div style={{
@@ -217,7 +235,7 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
           <div style={{
             position: 'absolute',
             top: '14px', left: '14px', right: '14px', bottom: '14px',
-            background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 40%, #fefce8 100%)',
+            background: '#ffffff',
             borderRadius: '12px',
             border: '3px solid #daa520',
             overflow: 'hidden',
@@ -250,20 +268,20 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
               </div>
 
               {/* ──── Center name + Header ──── */}
-              <div style={{ textAlign: 'center', marginBottom: '4px', marginTop: '8px' }}>
+              <div style={{ textAlign: 'center', marginBottom: '12px', marginTop: '16px' }}>
                 <p style={{
-                  fontSize: '11px', fontWeight: 800, color: '#1d4ed8',
-                  textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '6px',
+                  fontSize: '13px', fontWeight: 800, color: '#1d4ed8',
+                  textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '8px',
                 }}>
                   TRUNG TÂM NGOẠI NGỮ CÔ PHƯỢNG UYÊN
                 </p>
               </div>
 
               {/* ──── Title: GIẤY CHỨNG NHẬN ──── */}
-              <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+              <div style={{ textAlign: 'center', marginBottom: '16px' }}>
                 <h1 style={{
-                  fontSize: '36px', fontWeight: 900, color: '#1e40af',
-                  textTransform: 'uppercase', letterSpacing: '4px',
+                  fontSize: '40px', fontWeight: 900, color: '#1e40af',
+                  textTransform: 'uppercase', letterSpacing: '5px',
                   textShadow: '2px 2px 4px rgba(30,64,175,0.15)',
                   fontFamily: "'Nunito', sans-serif",
                   lineHeight: 1.1,
@@ -271,7 +289,7 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                   GIẤY CHỨNG NHẬN
                 </h1>
                 <div style={{
-                  width: '200px', height: '3px', margin: '6px auto 0',
+                  width: '240px', height: '3px', margin: '12px auto 0',
                   background: 'linear-gradient(90deg, transparent, #daa520, transparent)',
                   borderRadius: '2px',
                 }}/>
@@ -279,39 +297,39 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
 
               {/* ──── Subtitle ──── */}
               <p style={{
-                fontSize: '13px', color: '#64748b', fontWeight: 600,
-                textTransform: 'uppercase', letterSpacing: '3px',
-                marginBottom: '8px',
+                fontSize: '14px', color: '#64748b', fontWeight: 700,
+                textTransform: 'uppercase', letterSpacing: '4px',
+                marginBottom: '16px',
               }}>
                 VINH DANH HỌC VIÊN
               </p>
 
               {/* ──── Student Name ──── */}
-              <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                 <h2 style={{
-                  fontSize: '34px', fontWeight: 900, color: '#1e293b',
+                  fontSize: '42px', fontWeight: 900, color: '#1e293b',
                   fontFamily: "'Georgia', 'Times New Roman', serif",
                   letterSpacing: '1px', lineHeight: 1.2,
                 }}>
                   {studentName || "Học sinh giỏi"}
                 </h2>
                 <div style={{
-                  width: '180px', height: '2px', margin: '4px auto 0',
+                  width: '220px', height: '2px', margin: '8px auto 0',
                   background: 'linear-gradient(90deg, transparent, #daa520, #daa520, transparent)',
                   borderRadius: '2px',
                 }}/>
               </div>
 
               {/* ──── Challenge description ──── */}
-              <div style={{ textAlign: 'center', marginBottom: '14px' }}>
+              <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                 <p style={{
-                  fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: '3px',
+                  fontSize: '14px', color: '#64748b', fontWeight: 600, marginBottom: '6px',
                 }}>
-                  Đã hoàn thành thử thách
+                  Đã hoàn thành xuất sắc thử thách
                 </p>
                 <p style={{
-                  fontSize: '16px', fontWeight: 800, color: '#1e40af',
-                  fontStyle: 'italic', maxWidth: '400px', lineHeight: 1.3,
+                  fontSize: '20px', fontWeight: 800, color: '#1e40af',
+                  fontStyle: 'italic', maxWidth: '440px', lineHeight: 1.4, margin: '0 auto',
                 }}>
                   {topic}
                 </p>
@@ -420,18 +438,18 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                   <LaurelRight />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '20px' }}>{evaluation.emoji}</span>
-                  <span style={{ fontSize: '11px', color: '#dc2626', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '24px' }}>{evaluation.emoji}</span>
+                  <span style={{ fontSize: '13px', color: '#dc2626', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.5px' }}>
                     Thành tích
                   </span>
-                  <span style={{ fontSize: '20px' }}>{evaluation.emoji}</span>
+                  <span style={{ fontSize: '24px' }}>{evaluation.emoji}</span>
                 </div>
 
                 <h3 style={{
-                  fontSize: '22px', fontWeight: 900, color: theme.badgeText,
-                  textTransform: 'uppercase', letterSpacing: '2px', lineHeight: 1.2,
-                  marginBottom: '6px',
+                  fontSize: '26px', fontWeight: 900, color: theme.badgeText,
+                  textTransform: 'uppercase', letterSpacing: '2px', lineHeight: 1.3,
+                  marginBottom: '8px',
                 }}>
                   {evaluation.text}
                 </h3>
@@ -446,43 +464,41 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
               {/* ──── Footer: Date + Signature ──── */}
               <div style={{
                 width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-                paddingLeft: '20px', paddingRight: '20px',
-                marginTop: 'auto',
+                paddingLeft: '30px', paddingRight: '30px',
+                marginTop: 'auto', marginBottom: '10px'
               }}>
                 {/* Left: Custom Icon/Logo + Date */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', paddingBottom: '16px' }}>
                   <img 
                     src="https://i.postimg.cc/fb4BH1rF/cf0e6918-00a9-4b75-8bee-65d4e67fa7bf.png" 
-                    alt="Footer Icon" 
-                    style={{ width: '64px', height: '64px', objectFit: 'contain' }} 
+                    alt="2 bạn nhỏ" 
+                    style={{ width: '150px', height: 'auto', objectFit: 'contain' }} 
                   />
-                  <div>
-                    <p style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>
-                      Ngày cấp: {fullDateStr}
-                    </p>
-                  </div>
+                  <p style={{ fontSize: '14px', color: '#64748b', fontWeight: 600 }}>
+                    Ngày cấp: {fullDateStr}
+                  </p>
                 </div>
 
                 {/* Right: Signature block - chuẩn hành chính */}
                 <div style={{ textAlign: 'center', minWidth: '180px' }}>
                   {/* Signature image */}
-                  <div style={{ marginBottom: '-10px', display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ marginBottom: '-15px', display: 'flex', justifyContent: 'center' }}>
                     <img 
                       src="https://i.postimg.cc/yYvMb6mb/Untitled-(460-x-460-px).png" 
                       alt="Chữ ký" 
-                      style={{ width: '130px', height: '130px', objectFit: 'contain' }} 
+                      style={{ width: '160px', height: '160px', objectFit: 'contain' }} 
                     />
                   </div>
                   {/* Title */}
                   <p style={{
-                    fontSize: '10px', fontWeight: 700, color: '#1d4ed8',
-                    fontStyle: 'italic', marginBottom: '2px',
+                    fontSize: '14px', fontWeight: 700, color: '#1d4ed8',
+                    fontStyle: 'italic', marginBottom: '4px',
                   }}>
                     Giám đốc Trung tâm
                   </p>
                   {/* Full name */}
                   <p style={{
-                    fontSize: '14px', fontWeight: 800, color: '#1e293b',
+                    fontSize: '18px', fontWeight: 800, color: '#1e293b',
                     fontFamily: "'Georgia', serif",
                   }}>
                     Võ Thùy Phượng Uyên
