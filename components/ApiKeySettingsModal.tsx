@@ -37,8 +37,8 @@ export const ApiKeySettingsModal: React.FC<ApiKeySettingsModalProps> = ({
       setError('Vui lòng nhập API Key!');
       return;
     }
-    if (!trimmed.startsWith('AIza')) {
-      setError('API Key không hợp lệ! Key Gemini thường bắt đầu bằng "AIza..."');
+    if (trimmed.length < 10) {
+      setError('API Key quá ngắn! Vui lòng kiểm tra lại.');
       return;
     }
     setApiKey(trimmed);

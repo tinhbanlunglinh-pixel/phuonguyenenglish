@@ -98,29 +98,7 @@ const CornerOrnament = ({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) =
   );
 };
 
-/* ── Chữ ký Cô Phượng Uyên (SVG vẽ lại từ ảnh) ── */
-const SignaturePhuongUyen = () => (
-  <svg width="160" height="70" viewBox="0 0 200 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g stroke="#1a1a6e" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      {/* Nét chữ "P" cách điệu - nét đứng + vòng cong */}
-      <path d="M55 65 C52 55 48 40 50 30 C52 20 58 15 62 18 C66 21 68 28 65 35 C62 42 55 45 50 42"/>
-      {/* Vòng xoắn trên đầu chữ P */}
-      <path d="M58 20 C62 12 70 10 72 16 C74 22 68 28 60 25 C52 22 50 16 55 12 C60 8 68 8 72 14"/>
-      {/* Nét gạch ngang mở rộng */}
-      <path d="M42 38 C55 36 70 34 85 33 C100 32 120 33 140 38"/>
-      {/* Chữ "h" nhỏ */}
-      <path d="M75 45 C75 38 76 32 78 35 C80 38 82 45 85 42"/>
-      {/* Chữ "ượng" - chuỗi nét lượn */}
-      <path d="M85 42 C88 48 92 42 95 45 C98 48 100 42 103 45 C106 48 108 44 110 42"/>
-      {/* Chữ "Uyên" - nét viết liền */}
-      <path d="M115 42 C112 50 115 55 120 48 C125 41 128 48 132 45 C136 42 138 48 142 44 C146 40 148 46 150 48"/>
-      {/* Nét gạch dưới dài - signature underline */}
-      <path d="M48 62 C65 58 90 56 120 58 C150 60 170 65 185 68" strokeWidth="1.5"/>
-      {/* Nét phẩy cuối */}
-      <path d="M185 68 C188 66 190 62 188 58" strokeWidth="1.2"/>
-    </g>
-  </svg>
-);
+
 
 
 /* ── Alarm clock icon ── */
@@ -137,39 +115,7 @@ const AlarmClockIcon = () => (
   </svg>
 );
 
-/* ── Cute student character ── */
-const CuteStudent = () => (
-  <svg width="90" height="100" viewBox="0 0 90 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Hair */}
-    <ellipse cx="45" cy="30" rx="22" ry="20" fill="#4a2511"/>
-    <ellipse cx="28" cy="35" rx="8" ry="12" fill="#4a2511"/>
-    <ellipse cx="62" cy="35" rx="8" ry="12" fill="#4a2511"/>
-    {/* Face */}
-    <ellipse cx="45" cy="38" rx="18" ry="17" fill="#ffe4c4"/>
-    {/* Eyes */}
-    <ellipse cx="38" cy="36" rx="3.5" ry="4" fill="#2d1b11"/>
-    <ellipse cx="52" cy="36" rx="3.5" ry="4" fill="#2d1b11"/>
-    <circle cx="36.5" cy="34.5" r="1.2" fill="white"/>
-    <circle cx="50.5" cy="34.5" r="1.2" fill="white"/>
-    {/* Blush */}
-    <ellipse cx="33" cy="42" rx="4" ry="2.5" fill="#ffb6c1" opacity="0.5"/>
-    <ellipse cx="57" cy="42" rx="4" ry="2.5" fill="#ffb6c1" opacity="0.5"/>
-    {/* Smile */}
-    <path d="M40 44 Q45 49 50 44" stroke="#c0392b" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-    {/* Body - school uniform */}
-    <path d="M30 55 Q45 52 60 55 L63 85 Q45 88 27 85 Z" fill="#2563eb"/>
-    {/* Collar */}
-    <path d="M35 55 L45 65 L55 55" fill="white" stroke="#e5e7eb" strokeWidth="0.5"/>
-    {/* Arms */}
-    <path d="M27 58 L18 75" stroke="#ffe4c4" strokeWidth="6" strokeLinecap="round"/>
-    <path d="M63 58 L72 75" stroke="#ffe4c4" strokeWidth="6" strokeLinecap="round"/>
-    {/* Waving hand */}
-    <circle cx="72" cy="72" r="4" fill="#ffe4c4"/>
-    {/* Hair accessories */}
-    <circle cx="28" cy="24" r="4" fill="#ff69b4"/>
-    <circle cx="62" cy="24" r="4" fill="#ff69b4"/>
-  </svg>
-);
+
 
 export const LessonCertificate: React.FC<LessonCertificateProps> = ({
   studentName,
@@ -503,11 +449,15 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                 paddingLeft: '20px', paddingRight: '20px',
                 marginTop: 'auto',
               }}>
-                {/* Left: Trophy + Date */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <TrophyIcon />
+                {/* Left: Custom Icon/Logo + Date */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <img 
+                    src="https://i.postimg.cc/fb4BH1rF/cf0e6918-00a9-4b75-8bee-65d4e67fa7bf.png" 
+                    alt="Footer Icon" 
+                    style={{ width: '64px', height: '64px', objectFit: 'contain' }} 
+                  />
                   <div>
-                    <p style={{ fontSize: '10px', color: '#94a3b8' }}>
+                    <p style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>
                       Ngày cấp: {fullDateStr}
                     </p>
                   </div>
@@ -516,8 +466,12 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                 {/* Right: Signature block - chuẩn hành chính */}
                 <div style={{ textAlign: 'center', minWidth: '180px' }}>
                   {/* Signature image */}
-                  <div style={{ marginBottom: '0px', display: 'flex', justifyContent: 'center' }}>
-                    <SignaturePhuongUyen />
+                  <div style={{ marginBottom: '-10px', display: 'flex', justifyContent: 'center' }}>
+                    <img 
+                      src="https://i.postimg.cc/yYvMb6mb/Untitled-(460-x-460-px).png" 
+                      alt="Chữ ký" 
+                      style={{ width: '130px', height: '130px', objectFit: 'contain' }} 
+                    />
                   </div>
                   {/* Title */}
                   <p style={{
@@ -534,14 +488,6 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                     Võ Thùy Phượng Uyên
                   </p>
                 </div>
-              </div>
-
-              {/* ──── Cute student character (bottom right) ──── */}
-              <div style={{
-                position: 'absolute', bottom: '30px', right: '-5px',
-                opacity: 0.9, transform: 'scale(0.85)',
-              }}>
-                <CuteStudent />
               </div>
 
             </div>

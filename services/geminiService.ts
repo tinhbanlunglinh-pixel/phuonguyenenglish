@@ -58,7 +58,8 @@ export const setSelectedModel = (modelId: string): void => {
 };
 
 export const hasApiKey = (): boolean => {
-  return !!getApiKey();
+  const key = getApiKey();
+  return !!key && key.length > 30;
 };
 
 // Create AI instance with API key from localStorage
