@@ -10,12 +10,12 @@ const MODEL_STORAGE = 'co_phuong_uyen_selected_model';
 const OLD_MODEL_STORAGE = 'nextgen_english_selected_model';
 
 // Model fallback order (Updated July 2026)
-// Default: gemini-3.6-flash (GA, best stability)
-// Fallback: gemini-3.6-flash → gemini-3.5-flash-lite → gemini-3.1-pro
+// Default: gemini-3.5-flash (best performance/cost ratio)
+// Fallback: gemini-3.5-flash → gemini-3.1-pro → gemini-3-flash
 export const AVAILABLE_MODELS = [
-  { id: 'gemini-3.6-flash', name: 'Gemini 3.6 Flash ⚡', isDefault: true },
-  { id: 'gemini-3.5-flash-lite', name: 'Gemini 3.5 Flash Lite' },
+  { id: 'gemini-3.5-flash', name: 'Gemini 3.5 Flash', isDefault: true },
   { id: 'gemini-3.1-pro', name: 'Gemini 3.1 Pro' },
+  { id: 'gemini-3-flash', name: 'Gemini 3 Flash' },
 ];
 
 export const getApiKey = (): string | null => {
@@ -40,22 +40,11 @@ export const setApiKey = (key: string): void => {
 export const getSelectedModel = (): string => {
   if (typeof window !== 'undefined') {
     const newModel = localStorage.getItem(MODEL_STORAGE);
-    if (newModel) {
-      // Check if saved model is still available; if not, reset to default
-      const isValid = AVAILABLE_MODELS.some(m => m.id === newModel);
-      if (isValid) return newModel;
-      // Deprecated model saved → auto-migrate to default
-      const defaultModel = AVAILABLE_MODELS[0].id;
-      localStorage.setItem(MODEL_STORAGE, defaultModel);
-      console.warn(`⚠️ Model "${newModel}" không còn khả dụng. Đã tự động chuyển sang "${defaultModel}".`);
-      return defaultModel;
-    }
+    if (newModel) return newModel;
     const oldModel = localStorage.getItem(OLD_MODEL_STORAGE);
     if (oldModel) {
-      const isValid = AVAILABLE_MODELS.some(m => m.id === oldModel);
-      const finalModel = isValid ? oldModel : AVAILABLE_MODELS[0].id;
-      localStorage.setItem(MODEL_STORAGE, finalModel);
-      return finalModel;
+      localStorage.setItem(MODEL_STORAGE, oldModel);
+      return oldModel;
     }
     return AVAILABLE_MODELS[0].id;
   }
@@ -102,15 +91,8 @@ export const callWithFallback = async <T>(
         lastError = error;
         const errorMessage = error.message || '';
         const isOverloaded = errorMessage.includes('503') || errorMessage.includes('429') || errorMessage.includes('high demand');
-        const isNotFound = errorMessage.includes('404') || errorMessage.includes('NOT_FOUND') || errorMessage.includes('not found');
         
         console.warn(`[Lần ${attempt}] Model ${model.id} failed:`, errorMessage);
-        
-        // Model không tồn tại → bỏ qua ngay, chuyển model dự phòng
-        if (isNotFound) {
-          console.warn(`⚠️ Model "${model.id}" không tồn tại. Chuyển sang model dự phòng...`);
-          break;
-        }
         
         if (isOverloaded && attempt < maxRetriesPerModel) {
           // Delay 2s (lần 1), 4s (lần 2)...
@@ -128,9 +110,6 @@ export const callWithFallback = async <T>(
 
   // Nếu đã thử tất cả các model và vẫn lỗi
   const finalErrorMsg = lastError?.message || '';
-  if (finalErrorMsg.includes('404') || finalErrorMsg.includes('NOT_FOUND') || finalErrorMsg.includes('not found')) {
-    throw new Error('Tất cả các model AI đều không khả dụng (lỗi 404). Vui lòng vào ⚙️ Cài đặt API Key → chọn lại Model mới nhất, hoặc liên hệ hỗ trợ.');
-  }
   if (finalErrorMsg.includes('503') || finalErrorMsg.includes('429') || finalErrorMsg.includes('high demand')) {
     throw new Error('Hệ thống AI của Google đang bị quá tải do nhu cầu cao (Lỗi 503). Hệ thống đã tự động thử lại nhiều lần bằng các model dự phòng nhưng chưa thành công. Vui lòng đợi khoảng 1-2 phút rồi ấn thử lại nhé!');
   }

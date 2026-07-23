@@ -91,8 +91,6 @@ function App() {
         setError("LỖI 429: Hết hạn mức sử dụng (Quota Exhausted). Cô hãy đổi API Key khác nhé!");
       } else if (rawError.includes("401") || rawError.includes("API_KEY_INVALID")) {
         setError("LỖI 401: Mã API Key không hợp lệ! Cô hãy kiểm tra lại nhé!");
-      } else if (rawError.includes("404") || rawError.includes("NOT_FOUND") || rawError.includes("not found")) {
-        setError("LỖI 404: Model AI đã hết hạn hoặc không còn khả dụng. Vui lòng vào ⚙️ API Key → chọn lại Model mới nhất!");
       } else {
         setError(`LỖI HỆ THỐNG: ${rawError}`);
       }
@@ -116,8 +114,8 @@ function App() {
   function getEvaluation(score: number) {
     const s = score || 0;
     if (s >= 9) return { text: "HOÀN THÀNH XUẤT SẮC", emoji: "🌟", level: "EXCELLENT", praise: "Con là một ngôi sao sáng nhất lớp CÔ PHƯỢNG UYÊN!" };
-    if (s >= 8) return { text: "HOÀN THÀNH TỐT", emoji: "🥇", level: "OUTSTANDING", praise: "Con đã làm rất tốt!\nHãy tiếp tục học tập và chinh phục nhiều thử thách mới nhé!" };
-    if (s >= 7) return { text: "HOÀN THÀNH KHÁ", emoji: "⭐", level: "GREAT JOB", praise: "Con làm bài rất tuyệt vời, tiếp tục phát huy nhé!" };
+    if (s >= 8) return { text: "HOÀN THÀNH TIÊU BIỂU", emoji: "🥇", level: "OUTSTANDING", praise: "Con đã làm rất tốt!\nHãy tiếp tục học tập và chinh phục nhiều thử thách mới nhé!" };
+    if (s >= 7) return { text: "HOÀN THÀNH TỐT", emoji: "⭐", level: "GREAT JOB", praise: "Con làm bài rất tuyệt vời, tiếp tục phát huy nhé!" };
     if (s >= 6) return { text: "HOÀN THÀNH", emoji: "👍", level: "GOOD EFFORT", praise: "Con đã nỗ lực rất nhiều, CÔ PHƯỢNG UYÊN tự hào về con!" };
     return { text: "CẦN CỐ GẮNG HƠN NỮA", emoji: "🌱", level: "KEEP IT UP", praise: "Đừng nản lòng con nhé, bài sau mình làm tốt hơn nào!" };
   }
