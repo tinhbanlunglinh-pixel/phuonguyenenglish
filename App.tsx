@@ -44,6 +44,7 @@ function App() {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [sheetStatus, setSheetStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [sheetMessage, setSheetMessage] = useState('');
+  const [certExported, setCertExported] = useState(false);
   const savedRef = useRef(false);
 
   // Auto-open API Key modal if no key is set
@@ -218,6 +219,8 @@ function App() {
                         setStudentClass('');
                         setMegaScores({ mc: 0, memoryMatch: 0, oddOneOut: 0, wordGuess: 0, emojiDecode: 0 });
                         setShowCertificate(false);
+                        setCertExported(false);
+                        savedRef.current = false;
                         setSheetStatus('idle');
                         setSheetMessage('');
                         setError(null);
@@ -279,11 +282,26 @@ function App() {
                       {evaluation.emoji} {evaluation.text}
                     </div>
 
+                    {/* Validation error */}
+                    {!studentName.trim() || !studentClass.trim() ? (
+                      <p className="text-sm text-orange-500 font-bold mt-2 bg-orange-50 px-4 py-2 rounded-lg border border-orange-200">
+                        ⚠️ Vui lòng nhập <strong>Tên</strong> và <strong>Lớp</strong> ở trên để xuất Giấy chứng nhận
+                      </p>
+                    ) : null}
+
                     <button
                       onClick={async () => {
+                        // Validate bắt buộc nhập tên + lớp
+                        if (!studentName.trim() || !studentClass.trim()) {
+                          return;
+                        }
+                        // Chỉ cho xuất 1 lần / bài học
+                        if (savedRef.current) return;
+
                         setShowCertificate(true);
-                        if (!savedRef.current && lesson) {
+                        if (lesson) {
                           savedRef.current = true;
+                          setCertExported(true);
                           // Lưu vào localStorage
                           saveLessonRecord({
                             id: generateRecordId(),
@@ -293,7 +311,7 @@ function App() {
                             totalCorrect: totalCorrectCount,
                             totalQuestions: totalQuestions,
                             skillScores: { ...megaScores },
-                            studentName: studentName || 'Ẩn danh',
+                            studentName: studentName,
                           });
                           // Gửi lên Google Sheet
                           if (hasGoogleSheetUrl()) {
@@ -301,8 +319,8 @@ function App() {
                             setSheetMessage('');
                             try {
                               const result = await sendReportToSheet({
-                                studentName: studentName || 'Ẩn danh',
-                                className: studentClass || '',
+                                studentName: studentName,
+                                className: studentClass,
                                 topic: lesson.topic,
                                 score: totalScore,
                                 totalCorrect: totalCorrectCount,
@@ -317,9 +335,16 @@ function App() {
                           }
                         }
                       }}
-                      className="mt-4 px-6 py-3 sm:px-8 sm:py-4 bg-emerald-500 text-white rounded-xl font-bold text-sm sm:text-base shadow-lg hover:bg-emerald-400 transition-all"
+                      disabled={certExported || !studentName.trim() || !studentClass.trim()}
+                      className={`mt-4 px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base shadow-lg transition-all ${
+                        certExported
+                          ? 'bg-slate-400 text-white cursor-not-allowed'
+                          : !studentName.trim() || !studentClass.trim()
+                            ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                            : 'bg-emerald-500 text-white hover:bg-emerald-400'
+                      }`}
                     >
-                      🏆 Xuất chứng nhận
+                      {certExported ? '✅ Đã xuất chứng nhận' : '🏆 Xuất chứng nhận'}
                     </button>
                     {sheetStatus === 'sending' && (
                       <p className="text-sm text-blue-500 font-semibold animate-pulse mt-2">📤 Đang gửi báo cáo lên Google Sheet...</p>
