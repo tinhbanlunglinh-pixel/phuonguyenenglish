@@ -407,7 +407,8 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                 borderRadius: '16px',
                 padding: '12px 28px',
                 textAlign: 'center',
-                marginBottom: '10px',
+                marginTop: '10px',
+                marginBottom: '24px',
                 position: 'relative',
                 boxShadow: `0 4px 15px ${theme.badgeBorder}40`,
                 minWidth: '340px',
@@ -444,7 +445,7 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
               </div>
 
               {/* ──── Motivational Quote ──── */}
-              <div style={{ textAlign: 'center', marginTop: '6px', marginBottom: '4px', maxWidth: '420px' }}>
+              <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '4px', maxWidth: '420px' }}>
                 <p style={{
                   fontSize: '11px', fontWeight: 700, color: '#1e40af',
                   fontStyle: 'italic', lineHeight: 1.5, marginBottom: '2px',
@@ -470,7 +471,7 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
                   <img 
                     src="https://i.postimg.cc/fb4BH1rF/cf0e6918-00a9-4b75-8bee-65d4e67fa7bf.png" 
                     alt="Footer Icon" 
-                    style={{ width: '100px', height: '100px', objectFit: 'contain' }} 
+                    style={{ width: '130px', height: '130px', objectFit: 'contain' }} 
                   />
                   <p style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, fontStyle: 'italic' }}>
                     Ngày cấp: {fullDateStr}

@@ -8,6 +8,7 @@ import { LessonCertificate } from './components/LessonCertificate';
 import { LearningHistory } from './components/LearningHistory';
 import { ApiKeySettingsModal } from './components/ApiKeySettingsModal';
 import { saveLessonRecord, generateRecordId } from './services/historyService';
+import { sendReportToSheet, hasGoogleSheetUrl } from './services/googleSheetService';
 
 declare global {
   interface AIStudio {
@@ -36,10 +37,13 @@ function App() {
   const [lesson, setLesson] = useState<LessonPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [studentName, setStudentName] = useState('');
+  const [studentClass, setStudentClass] = useState('');
   const [megaScores, setMegaScores] = useState({ mc: 0, memoryMatch: 0, oddOneOut: 0, wordGuess: 0, emojiDecode: 0 });
   const [showCertificate, setShowCertificate] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [sheetStatus, setSheetStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [sheetMessage, setSheetMessage] = useState('');
   const savedRef = useRef(false);
 
   // Auto-open API Key modal if no key is set
@@ -211,8 +215,11 @@ function App() {
                         setLessonText('');
                         setSelectedFiles([]);
                         setStudentName('');
+                        setStudentClass('');
                         setMegaScores({ mc: 0, memoryMatch: 0, oddOneOut: 0, wordGuess: 0, emojiDecode: 0 });
                         setShowCertificate(false);
+                        setSheetStatus('idle');
+                        setSheetMessage('');
                         setError(null);
                       }}
                       className="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-3 py-2 sm:px-5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm shadow-lg transition-all active:scale-95"
@@ -227,6 +234,7 @@ function App() {
                   <div className="flex flex-col items-center gap-4">
                     <label className="text-brand-600 font-black uppercase tracking-[0.2em] text-base font-sans">Chào mừng con:</label>
                     <input type="text" placeholder="Nhập tên của con nhé..." value={studentName} onChange={e => setStudentName(e.target.value)} className="p-4 w-full max-w-xl rounded-2xl border-4 border-brand-50 font-black text-2xl text-center outline-none bg-brand-50/50" />
+                    <input type="text" placeholder="Nhập lớp (VD: 6A1, 7B2...)" value={studentClass} onChange={e => setStudentClass(e.target.value)} className="p-3 w-full max-w-xs rounded-2xl border-4 border-brand-50 font-bold text-lg text-center outline-none bg-brand-50/50 text-brand-700" />
                   </div>
                 </div>
 
@@ -272,10 +280,11 @@ function App() {
                     </div>
 
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         setShowCertificate(true);
                         if (!savedRef.current && lesson) {
                           savedRef.current = true;
+                          // Lưu vào localStorage
                           saveLessonRecord({
                             id: generateRecordId(),
                             date: new Date().toISOString(),
@@ -286,12 +295,41 @@ function App() {
                             skillScores: { ...megaScores },
                             studentName: studentName || 'Ẩn danh',
                           });
+                          // Gửi lên Google Sheet
+                          if (hasGoogleSheetUrl()) {
+                            setSheetStatus('sending');
+                            setSheetMessage('');
+                            try {
+                              const result = await sendReportToSheet({
+                                studentName: studentName || 'Ẩn danh',
+                                className: studentClass || '',
+                                topic: lesson.topic,
+                                score: totalScore,
+                                totalCorrect: totalCorrectCount,
+                                totalQuestions: totalQuestions,
+                              });
+                              setSheetStatus(result.success ? 'success' : 'error');
+                              setSheetMessage(result.message);
+                            } catch {
+                              setSheetStatus('error');
+                              setSheetMessage('Không thể gửi báo cáo lên Google Sheet.');
+                            }
+                          }
                         }
                       }}
                       className="mt-4 px-6 py-3 sm:px-8 sm:py-4 bg-emerald-500 text-white rounded-xl font-bold text-sm sm:text-base shadow-lg hover:bg-emerald-400 transition-all"
                     >
                       🏆 Xuất chứng nhận
                     </button>
+                    {sheetStatus === 'sending' && (
+                      <p className="text-sm text-blue-500 font-semibold animate-pulse mt-2">📤 Đang gửi báo cáo lên Google Sheet...</p>
+                    )}
+                    {sheetStatus === 'success' && (
+                      <p className="text-sm text-emerald-600 font-semibold mt-2">✅ {sheetMessage}</p>
+                    )}
+                    {sheetStatus === 'error' && (
+                      <p className="text-sm text-red-500 font-semibold mt-2">❌ {sheetMessage}</p>
+                    )}
                   </div>
                 </div>
 

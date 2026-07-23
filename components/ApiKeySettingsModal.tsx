@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getApiKey, setApiKey, hasApiKey, getSelectedModel, setSelectedModel, AVAILABLE_MODELS } from '../services/geminiService';
+import { getGoogleSheetUrl, setGoogleSheetUrl } from '../services/googleSheetService';
 
 interface ApiKeySettingsModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export const ApiKeySettingsModal: React.FC<ApiKeySettingsModalProps> = ({
 }) => {
   const [keyInput, setKeyInput] = useState('');
   const [selectedModelId, setSelectedModelId] = useState('');
+  const [sheetUrl, setSheetUrl] = useState('');
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,6 +26,7 @@ export const ApiKeySettingsModal: React.FC<ApiKeySettingsModalProps> = ({
       const existingKey = getApiKey();
       setKeyInput(existingKey || '');
       setSelectedModelId(getSelectedModel());
+      setSheetUrl(getGoogleSheetUrl());
       setSaved(false);
       setError('');
     }
@@ -43,6 +46,7 @@ export const ApiKeySettingsModal: React.FC<ApiKeySettingsModalProps> = ({
     }
     setApiKey(trimmed);
     setSelectedModel(selectedModelId);
+    setGoogleSheetUrl(sheetUrl);
     setSaved(true);
     setError('');
     setTimeout(() => {
@@ -161,6 +165,23 @@ export const ApiKeySettingsModal: React.FC<ApiKeySettingsModalProps> = ({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Google Sheet URL */}
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
+              📊 Google Sheet URL <span className="text-slate-400 text-xs font-normal">(Tùy chọn)</span>
+            </label>
+            <input
+              type="url"
+              value={sheetUrl}
+              onChange={(e) => setSheetUrl(e.target.value)}
+              placeholder="Dán URL Web App (https://script.google.com/...)"
+              className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-sm font-semibold transition-all bg-slate-50"
+            />
+            <p className="mt-1.5 text-xs text-slate-400">
+              Kết quả học sinh sẽ tự động gửi lên Google Sheet khi bấm "Xuất chứng nhận"
+            </p>
           </div>
         </div>
 
